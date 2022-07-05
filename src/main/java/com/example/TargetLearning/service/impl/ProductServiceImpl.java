@@ -4,6 +4,7 @@ import com.example.TargetLearning.dto.mapper.ProductMapper;
 import com.example.TargetLearning.dto.request.ProductRequest;
 import com.example.TargetLearning.dto.response.ProductRespone;
 import com.example.TargetLearning.entity.Product;
+
 import com.example.TargetLearning.repository.ProductRepositiory;
 import com.example.TargetLearning.service.ProductService;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void deleteAll(){
+        productRepositiory.deleteAll();
+    }
+
+    @Override
     public ProductRespone saveProduct(ProductRequest productRequest){
         Product product = ProductMapper.MAPPER.fromRequestToEntity(productRequest);
         productRepositiory.save(product);
@@ -64,4 +70,7 @@ public class ProductServiceImpl implements ProductService {
         productRepositiory.save(product);
         return ProductMapper.MAPPER.fromEntityToResponse(product);
     }
+
+
+
 }
