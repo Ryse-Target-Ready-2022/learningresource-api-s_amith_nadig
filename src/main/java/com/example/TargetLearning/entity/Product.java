@@ -2,7 +2,8 @@ package com.example.TargetLearning.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Data
 @Entity
@@ -26,12 +27,12 @@ public class Product {
     private String product_status;
 
     @Column(name = "createdDate")
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @Column(name = "publishedDate")
-    private Date  publishedDate;
+    private LocalDateTime  publishedDate;
 
     @Column(name = "retiredDate")
-    private Date retiredDate;
+    private LocalDateTime retiredDate;
 
 }

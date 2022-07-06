@@ -3,6 +3,7 @@ package com.example.TargetLearning.controller;
 import com.example.TargetLearning.dto.request.ProductRequest;
 import com.example.TargetLearning.dto.response.ProductRespone;
 import com.example.TargetLearning.entity.Product;
+import com.example.TargetLearning.entity.ProductMargin;
 import com.example.TargetLearning.repository.ProductRepositiory;
 import com.example.TargetLearning.service.ProductService;
 import com.univocity.parsers.common.record.Record;
@@ -15,10 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -46,15 +47,14 @@ public class ProductController {
         return productService.updateProduct(product);
     }
     @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable("id") Long id) {
-        productService.deleteEmployee(id);
+    public void deleteProduct(@PathVariable("id") Long id) {
+        productService.deleteProduct(id);
     }
     @DeleteMapping("/all")
     public void deleteAll(){
         productService.deleteAll();
     }
 
-//    Using Request and Response with save and update employee
 
     @PostMapping("/res")
     public ProductRespone saveProResponse(@RequestBody ProductRequest productRequest) {
@@ -66,28 +66,50 @@ public class ProductController {
         return productService.updateProduct(productRequest, id);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/products/profits/upload")
     public String uploadData(@RequestParam("file")MultipartFile file) throws Exception{
-        List<Product> productsList =  new ArrayList<Product>();
-        InputStream inputStream = file.getInputStream();
-        CsvParserSettings setting = new CsvParserSettings();
-        setting.setHeaderExtractionEnabled(true);
-        CsvParser parser = new CsvParser(setting);
-        List<Record> parseAllRecords = parser.parseAllRecords(inputStream);
-        parseAllRecords.forEach(record -> {
-            Product product = new Product();
-//            product.setId(Long.valueOf(record.getString("product_id")));
-            product.setName(record.getString("name"));
-            product.setCost_price(Float.valueOf(record.getString("cost_price")));
-            product.setSelling_price(Float.valueOf(record.getString("selling_price")));
-            product.setProduct_status(record.getString("productStatus"));
-//            product.setCreatedDate(Date.from(Instant.parse(record.getString("createdDate"))));
-//            product.setPublishedDate(Date.from(Instant.parse(record.getString("publishedDate"))));
-//            product.setRetiredDate(Date.from(Instant.parse(record.getString("retiredDate"))));
-            productsList.add(product);
-        });
-        productRepositiory.saveAll(productsList);
-        return "Upload Sucessfull";
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            ArrayList<Product> productsList =  new ArrayList<Product>();
+            InputStream inputStream = file.getInputStream();
+            CsvParserSettings setting = new CsvParserSettings();
+            setting.setHeaderExtractionEnabled(true);
+            CsvParser parser = new CsvParser(setting);
+            ArrayList<Record> parseAllRecords = (ArrayList<Record>) parser.parseAllRecords(inputStream);
+            parseAllRecords.forEach(record -> {
+                Product product = new Product();
+                product.setId(Long.valueOf(record.getString("product_id")));
+                product.setName(record.getString("name"));
+                product.setCost_price(Float.valueOf(record.getString("cost_price")));
+                product.setSelling_price(Float.valueOf(record.getString("selling_price")));
+                product.setProduct_status(record.getString("productStatus"));
+                LocalDateTime createdDate = LocalDateTime.parse(record.getString("createdDate"), dateFormatter);
+                product.setCreatedDate( createdDate);
+                LocalDateTime publishedDate = LocalDateTime.parse(record.getString("publishedDate"),dateFormatter);
+                product.setPublishedDate(publishedDate);
+                LocalDateTime retiredDate = LocalDateTime.parse(record.getString("retiredDate"),dateFormatter);
+                product.setRetiredDate(retiredDate);
+                productsList.add(product);
+            });
+            productService.computeProfitMargin(productsList);
+//        productRepositiory.saveAll(productsList);
+            return "Upload Successful";
+        }catch (Exception e){
+            throw new Exception("Failed");
+        }
+
 
     }
+    @GetMapping("/profitslist")
+    public List<ProductMargin>findAllMarginedProducts(){
+        return productService.findAllMarginedProducts();
+    }
+
+    @DeleteMapping("/profitmargin/{id}")
+    public void deleteProductmargin(@PathVariable("id") Long id) {
+        productService.deleteProductMargin(id);
+    }
+
+
+
 }
