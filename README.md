@@ -12,5 +12,5 @@ Postman
   * Update the postgresDB Name, Connection Url and Password
 * Run the application 
 
-##Testing Application 
+## Testing Application 
 * Please Import the {Postman_Api_Collections} collections in postman & test the endpoints 
