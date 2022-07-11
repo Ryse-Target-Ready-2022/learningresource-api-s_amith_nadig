@@ -1,15 +1,17 @@
 package com.tgt.rysetti.learningresourcesapi.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 @Data
-
+@NoArgsConstructor
 @Entity
 @Table(name = "learningresources")
-public class LearningResource  {
+public class LearningResource implements Serializable {
     @Id
     @Column(name = "learning_resource_id")
     private Integer learningResourceId;
