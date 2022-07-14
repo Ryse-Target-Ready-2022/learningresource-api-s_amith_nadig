@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "learningresources")
 public class LearningResource implements Serializable {
@@ -30,6 +32,5 @@ public class LearningResource implements Serializable {
     private LocalDate publishedDate;
     @Column(name = "retired_date")
     private LocalDate retiredDate;
-
 
 }

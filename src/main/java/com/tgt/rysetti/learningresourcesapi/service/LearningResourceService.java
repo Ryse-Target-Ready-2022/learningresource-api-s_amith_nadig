@@ -1,15 +1,10 @@
 package com.tgt.rysetti.learningresourcesapi.service;
 
 import com.tgt.rysetti.learningresourcesapi.entity.LearningResource;
-import com.tgt.rysetti.learningresourcesapi.entity.LearningResourceStatus;
 import com.tgt.rysetti.learningresourcesapi.repository.LearningResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -20,12 +15,17 @@ public class LearningResourceService {
     LearningResourceRepository learningResourceRepository;
 
     public void saveLearningResources(List<LearningResource> learningResources){
-        for (LearningResource learningResource : learningResources)
+        for (LearningResource learningResource : learningResources){
             learningResourceRepository.save(learningResource);
+        }
+
+
     }
 
     public List<LearningResource> getLearningResources(){
-        return learningResourceRepository.findAll();
+        List<LearningResource> learningResources = learningResourceRepository.findAll();
+        System.out.println("Getting Data: "+learningResources);
+        return learningResources;
     }
 
     public List<Double> getProfitMargin(){
@@ -34,6 +34,7 @@ public class LearningResourceService {
         List<Double> profitMargins = learningResources.stream()
                 .map(lr -> ((lr.getSellingPrice() - lr.getCostPrice())/lr.getSellingPrice()))
                 .collect(toList());
+        System.out.println(profitMargins);
 
         return profitMargins;
     }
@@ -47,7 +48,7 @@ public class LearningResourceService {
 
             return profitMargin2.compareTo(profitMargin1) ;
         });
-
+        System.out.println(learningResources);
         return learningResources;
     }
 
