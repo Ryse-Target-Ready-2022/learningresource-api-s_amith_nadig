@@ -17,16 +17,20 @@ public class LearningResourceController {
 
     @GetMapping("/")
     public List<LearningResource> getALLlearningResources(){
+
+        System.out.println("Testing the Controller Layer Test - GetAllResources");
         return learningResourceService.getLearningResources();
     }
 
     @PostMapping(value = "/", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveLearningResources(@RequestBody List<LearningResource> learningResources){
+        System.out.println("Testing the Controller Layer Test - SaveResources");
         learningResourceService.saveLearningResources(learningResources);
     }
     @DeleteMapping(value = "/learningresource/{learningResourceId}")
     public void deleteLearningResource(@PathVariable int learningResourceId){
+        System.out.println("Testing the Controller Layer Test - Delete-Resources");
         learningResourceService.deleteLearningResourceById(learningResourceId);
     }
 }
