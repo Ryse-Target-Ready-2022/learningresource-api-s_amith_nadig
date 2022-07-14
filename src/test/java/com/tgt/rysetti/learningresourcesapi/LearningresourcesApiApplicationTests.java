@@ -9,5 +9,4 @@ class LearningresourcesApiApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
